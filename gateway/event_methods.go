@@ -40,6 +40,7 @@ func init() {
 		func() ws.Event { return new(GuildMemberRemoveEvent) },
 		func() ws.Event { return new(GuildMemberUpdateEvent) },
 		func() ws.Event { return new(GuildMembersChunkEvent) },
+		func() ws.Event { return new(GuildMemberListUpdateEvent) },
 		func() ws.Event { return new(GuildRoleCreateEvent) },
 		func() ws.Event { return new(GuildRoleUpdateEvent) },
 		func() ws.Event { return new(GuildRoleDeleteEvent) },
@@ -283,6 +284,12 @@ func (*GuildMembersChunkEvent) Op() ws.OpCode { return dispatchOp }
 
 // EventType implements Event.
 func (*GuildMembersChunkEvent) EventType() ws.EventType { return "GUILD_MEMBERS_CHUNK" }
+
+// Op implements Event. It always returns 0.
+func (*GuildMemberListUpdateEvent) Op() ws.OpCode { return dispatchOp }
+
+// EventType implements Event.
+func (*GuildMemberListUpdateEvent) EventType() ws.EventType { return "GUILD_MEMBER_LIST_UPDATE" }
 
 // Op implements Event. It always returns 0.
 func (*GuildRoleCreateEvent) Op() ws.OpCode { return dispatchOp }

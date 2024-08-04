@@ -390,10 +390,10 @@ type GuildMembersChunkEvent struct {
 	Nonce     string             `json:"nonce,omitempty"`
 }
 
-// GuildMemberListUpdate is a dispatch event. It is an undocumented event. It's
-// received when the client sends over GuildSubscriptions with the Channels
-// field used.  The State package does not handle this event.
-type GuildMemberListUpdate struct {
+// GuildMemberListUpdateEvent is a dispatch event. It is an undocumented event.
+// It's received when the client sends over GuildSubscriptions with the Channels
+// field used. The State package does not handle this event.
+type GuildMemberListUpdateEvent struct {
 	ID          string          `json:"id"`
 	GuildID     discord.GuildID `json:"guild_id"`
 	MemberCount uint64          `json:"member_count"`

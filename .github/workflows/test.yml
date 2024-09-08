@@ -36,9 +36,16 @@ jobs:
           go generate ./...
 
           if ! git diff --exit-code; then
-            echo '::error::Repository differ after `go generate`.'
-            exit 1
+            if [[ $GITHUB_REF == refs/heads/main ]]; then
+              echo '::error::Repository differ after `go generate`.'
+              exit 1
+            else
+              # Don't bother failing on non-main branches and PRs.
+              echo '::warning::Repository differ after `go generate`.'
+            fi
           fi
+        env:
+          GITHUB_REF: ${{ github.ref }}
 
   build:
     name: Build

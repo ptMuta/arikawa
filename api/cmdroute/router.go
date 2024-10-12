@@ -11,6 +11,7 @@ import (
 // Router is a router for slash commands. A zero-value Router is a valid router.
 type Router struct {
 	nodes  map[string]routeNode
+	dch    routeNode
 	mws    []Middleware
 	parent *Router  // parent router, if any
 	groups []Router // next routers to check, if any
@@ -409,10 +410,24 @@ func (r *Router) AddComponentFunc(id string, f ComponentHandlerFunc) {
 	r.AddComponent(id, f)
 }
 
+// AddDefaultComponent registers a component handler for unknown component IDs.
+func (r *Router) AddDefaultComponent(f ComponentHandler) {
+	r.dch = routeNodeComponent{f}
+}
+
+// AddDefaultComponentFunc is a convenience function that calls AddDefaultComponent
+// with a ComponentHandlerFunc.
+func (r *Router) AddDefaultComponentFunc(f ComponentHandlerFunc) {
+	r.AddDefaultComponent(f)
+}
+
 func (r *Router) handleComponent(ev *discord.InteractionEvent, component discord.ComponentInteraction) *api.InteractionResponse {
 	node, ok := r.nodes[string(component.ID())].(routeNodeComponent)
 	if ok {
 		return r.callComponentHandler(ev, node.component)
+	}
+	if r.dch != nil {
+		return r.callComponentHandler(ev, r.dch.(routeNodeComponent).component)
 	}
 	return nil
 }
